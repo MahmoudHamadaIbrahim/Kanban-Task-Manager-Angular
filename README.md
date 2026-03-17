@@ -3,6 +3,7 @@ A high-performance, responsive Kanban Board application built with Angular 19+, 
 
 🚀 Live Demo
 https://kanban-task-manager-angular-mahmoud-hamada.vercel.app/
+
 ✨ Key Features
 Modern Angular Architecture: Built using standalone components and modern Control Flow (@if, @for).
 
