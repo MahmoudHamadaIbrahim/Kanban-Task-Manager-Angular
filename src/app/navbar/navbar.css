@@ -1,0 +1,36 @@
+.custome-navbar {
+    background-image: linear-gradient(to right,
+            oklch(0.511 0.262 276.966) 0%,
+            oklch(0.558 0.288 302.321) 100%);
+}
+
+.nav-icon {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 900;
+}
+
+nav h1 {
+    color: #fff;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+button {
+    border: none;
+    background-color: oklab(0.999994 0.0000455678 0.0000200868 / 0.2);
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: oklab(0.999994 0.0000455678 0.0000200868 / 0.3);
+    cursor: pointer;
+}
+
+button i {
+    color: #fff;
+    font-weight: 900;
+}

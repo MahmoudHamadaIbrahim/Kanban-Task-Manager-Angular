@@ -1,0 +1,99 @@
+<div class="modal fade" id="taskModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content rounded-4 shadow">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">
+                    {{ isEditMode ? 'Update Task' : 'Create New Task' }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <form id="task-form" novalidate>
+                <div class="modal-body">
+
+                    <!-- Title -->
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="fa-solid fa-heading text-muted"></i>
+                            Task Title <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control"
+                            [class.is-invalid]="submitted && currentTask.title.trim().length === 0" required
+                            placeholder="What needs to be done?" name="currentTask.title"
+                            [(ngModel)]="currentTask.title">
+                        @if(submitted && currentTask.title.trim().length === 0) {
+                        <small class="text-danger">Task title is required</small>
+                        }
+                    </div>
+
+                    <!-- Priority & Date -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm-6">
+                            <label class="form-label">
+                                <i class="fa-solid fa-flag text-muted"></i>
+                                Priority
+                            </label>
+                            <select class="form-select" name="currentTask.priority" [(ngModel)]="currentTask.priority">
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label class="form-label">
+                                <i class="fa-regular fa-calendar text-muted"></i>
+                                Due Date
+                            </label>
+                            <input type="date" class="form-control" name="currentTask.dueDate"
+                                [class.is-invalid]="submitted && isPastDate()" [(ngModel)]="currentTask.dueDate">
+                            @if(submitted && isPastDate()) {
+                            <small class="text-danger">
+                                Due date cannot be in the past
+                            </small>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="fa-solid fa-align-left text-muted"></i>
+                            Description
+                        </label>
+                        <textarea class="form-control"
+                            [class.is-invalid]="submitted && currentTask.description.trim().length > 500" rows="3"
+                            name="currentTask.description" [(ngModel)]="currentTask.description"
+                            placeholder="Add more details about this task..."></textarea>
+                        @if (submitted && currentTask.description.length > 500) {
+                        <div class="invalid-feedback d-block">
+                            Description must not exceed 500 characters
+                        </div>
+                        }
+                        <div class="d-flex justify-content-end mt-1">
+                            <small class="text-muted text-end" id="char-count">{{currentTask.description.length}} /
+                                500</small>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="submit" [class.btn-success]="isEditMode" [class.btn-primary]="!isEditMode"
+                        class="btn d-flex align-items-center gap-2" (click)="saveTask()">
+                        <i class="fa-solid" [class]="isEditMode ? 'fa-save' : 'fa-plus'"></i>
+                        {{ isEditMode ? 'Update Task' : 'Add Task' }}
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

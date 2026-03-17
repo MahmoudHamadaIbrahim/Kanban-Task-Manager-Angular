@@ -1,0 +1,480 @@
+<app-modal (taskAdded)="onTaskAdded()"></app-modal>
+
+<main>
+    <div class="container-lg">
+        <div class="row mx-auto py-4">
+            <div class="col-md-4 col-lg-4 g-4">
+                <div class="card">
+                    <div class="d-flex align-items-center gap-3 title">
+                        <div class="d-flex justify-content-center align-items-center icon">
+                            <i class="fa-solid fa-clipboard-list"></i>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <h2>To Do</h2>
+                            <p class="tasks">{{todoTasks.length}} tasks</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-column overflow-y-auto pe-1">
+
+                        @if (todoTasks.length === 0) {
+                        <!-- Empty State -->
+                        <div class="d-flex flex-column align-items-center justify-content-center py-5 content">
+                            <i class="fa-regular fa-folder-open opacity-50"></i>
+                            <p>No tasks yet</p>
+                            <p class="mt-1">Click + to add one</p>
+                        </div>
+                        }
+                        @else {
+                        @for (task of todoTasks; track task.createdAt; let i = $index) {
+
+                        <div class="bg-white p-3 task mb-3">
+
+                            <!-- Top -->
+                            <div class="top-par d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="rounded-circle circle"></span>
+                                    <span class="index">#00{{ i + 1 }}</span>
+                                </div>
+
+                                <div class="d-flex align-items-center gap-1 btns">
+                                    <button (click)="editTask(task)"
+                                        class="btn edit-btn d-flex justify-content-center align-items-center">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
+                                    <button (click)="deleteTask(task)"
+                                        class="btn delete-btn d-flex justify-content-center align-items-center">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Title -->
+                            <h3 class="task-title">
+                                {{ task.title }}
+                            </h3>
+
+                            <!-- Description -->
+                            @if (task.description) {
+                            <p class="task-description">
+                                {{ task.description }}
+                            </p>
+                            }
+
+                            <!-- Tags -->
+                            <div class="tags d-flex flex-wrap align-items-center gap-2">
+
+                                <!-- Priority -->
+                                <span class="d-flex align-items-center priority" [class]="{
+                                'high': task.priority === 'high',
+                                'medium': task.priority === 'medium',
+                                'low': task.priority === 'low'
+                                }">
+                                    <span class="rounded-circle me-1" [class]="{
+                                    'bg-danger': task.priority === 'high',
+                                    'bg-warning': task.priority === 'medium',
+                                    'bg-success': task.priority === 'low'
+                                }"></span>
+                                    {{ task.priority === 'high'
+                                    ? 'HIGH PRIORITY'
+                                    : task.priority === 'medium'
+                                    ? 'MEDIUM'
+                                    : 'LOW'
+                                    }}
+                                </span>
+
+                                <!-- Due Soon -->
+                                @if (task.dueDate) {
+
+                                @if (getDueStatus(task.dueDate) === 'overdue') {
+                                <span class="d-flex align-items-center priority overdue">
+                                    OVERDUE
+                                </span>
+                                }
+
+                                @if (getDueStatus(task.dueDate) === 'soon') {
+                                <span class="d-flex align-items-center priority due-soon">
+                                    DUE SOON
+                                </span>
+                                }
+
+                                }
+
+
+                            </div>
+
+                            <!-- Meta Info -->
+                            <div class="meta-info d-flex align-items-center border-bottom gap-3">
+
+                                @if (task.dueDate) {
+                                <div class="d-flex align-items-center gap-1 date">
+                                    <i class="fa-regular fa-calendar"></i>
+                                    <span>{{ formatDate(task.dueDate) }}</span>
+                                </div>
+                                }
+
+                                <div class="d-flex align-items-center gap-1 createdat">
+                                    <i class="fa-regular fa-clock"></i>
+                                    <span>{{ timeAgo(task.createdAt) }}</span>
+                                </div>
+
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="action-btns d-flex flex-wrap gap-3">
+                                @if (task.status === 'todo') {
+                                <button (click)="updateStatus(task, 'in-progress')"
+                                    class="status-btn btn bgstart d-flex align-items-baseline gap-1">
+                                    <i class="fa-solid fa-play"></i>
+                                    <span>Start</span>
+                                </button>
+                                }
+
+                                <!-- To Do -->
+                                @if (task.status !== 'todo') {
+                                <button (click)="updateStatus(task, 'todo')"
+                                    class="status-btn btn bgtodo d-flex align-items-baseline gap-1">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                    <span>To Do</span>
+                                </button>
+                                }
+
+                                <!-- Complete -->
+                                @if (task.status !== 'completed') {
+                                <button (click)="updateStatus(task, 'completed')"
+                                    class="status-btn btn bgcomplete d-flex align-items-baseline gap-1">
+                                    <i class="fa-solid fa-check"></i>
+                                    <span>Complete</span>
+                                </button>
+                                }
+                            </div>
+
+                        </div>
+                        }
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-md-4 col-lg-4 g-4">
+                <div class="card">
+                    <div class="d-flex align-items-center gap-3 title">
+                        <div class="d-flex justify-content-center align-items-center icon bgprogress">
+                            <i class="fa-solid fa-spinner text-amber-500 text-lg"></i>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <h2>In Progress</h2>
+                            <p class="tasks">{{inProgressTasks.length}} tasks</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-column overflow-y-auto pe-1">
+
+                        @if (inProgressTasks.length === 0) {
+                        <!-- Empty State -->
+                        <div class="d-flex flex-column align-items-center justify-content-center py-5 content">
+                            <i class="fa-regular fa-folder-open opacity-50"></i>
+                            <p>No tasks yet</p>
+                            <p class="mt-1">Click + to add one</p>
+                        </div>
+                        }
+                        @else {
+                        @for (task of inProgressTasks; track task.createdAt; let i = $index) {
+
+                        <div class="bg-white p-3 task mb-3">
+
+                            <!-- Top -->
+                            <div class="top-par d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="rounded-circle circle progresscircle"></span>
+                                    <span class="index">#00{{ i + 1 }}</span>
+                                </div>
+
+                                <div class="d-flex align-items-center gap-1 btns">
+                                    <button (click)="editTask(task)"
+                                        class="btn edit-btn d-flex justify-content-center align-items-center">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
+                                    <button (click)="deleteTask(task)"
+                                        class="btn delete-btn d-flex justify-content-center align-items-center">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Title -->
+                            <h3 class="task-title">
+                                {{ task.title }}
+                            </h3>
+
+                            <!-- Description -->
+                            @if (task.description) {
+                            <p class="task-description">
+                                {{ task.description }}
+                            </p>
+                            }
+
+                            <!-- Tags -->
+                            <div class="tags d-flex flex-wrap align-items-center gap-2">
+
+                                <!-- Priority -->
+                                <span class="d-flex align-items-center priority" [class]="{
+                                'high': task.priority === 'high',
+                                'medium': task.priority === 'medium',
+                                'low': task.priority === 'low'
+                                }">
+                                    <span class="rounded-circle me-1" [class]="{
+                                    'bg-danger': task.priority === 'high',
+                                    'bg-warning': task.priority === 'medium',
+                                    'bg-success': task.priority === 'low'
+                                }"></span>
+                                    {{ task.priority === 'high'
+                                    ? 'HIGH PRIORITY'
+                                    : task.priority === 'medium'
+                                    ? 'MEDIUM'
+                                    : 'LOW'
+                                    }}
+                                </span>
+
+                                <!-- Due Soon -->
+                                @if (task.dueDate) {
+
+                                @if (getDueStatus(task.dueDate) === 'overdue') {
+                                <span class="d-flex align-items-center priority overdue">
+                                    OVERDUE
+                                </span>
+                                }
+
+                                @if (getDueStatus(task.dueDate) === 'soon') {
+                                <span class="d-flex align-items-center priority due-soon">
+                                    DUE SOON
+                                </span>
+                                }
+
+                                }
+
+
+                            </div>
+
+                            <!-- Meta Info -->
+                            <div class="meta-info d-flex align-items-center border-bottom gap-3">
+
+                                @if (task.dueDate) {
+                                <div class="d-flex align-items-center gap-1 date">
+                                    <i class="fa-regular fa-calendar"></i>
+                                    <span>{{ formatDate(task.dueDate) }}</span>
+                                </div>
+                                }
+
+                                <div class="d-flex align-items-center gap-1 createdat">
+                                    <i class="fa-regular fa-clock"></i>
+                                    <span>{{ timeAgo(task.createdAt) }}</span>
+                                </div>
+
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="action-btns d-flex flex-wrap gap-3">
+                                @if (task.status === 'todo') {
+                                <button (click)="updateStatus(task, 'in-progress')"
+                                    class="status-btn btn bgstart d-flex align-items-baseline gap-1">
+                                    <i class="fa-solid fa-play"></i>
+                                    <span>Start</span>
+                                </button>
+                                }
+
+                                <!-- To Do -->
+                                @if (task.status !== 'todo') {
+                                <button (click)="updateStatus(task, 'todo')"
+                                    class="status-btn btn bgtodo d-flex align-items-baseline gap-1">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                    <span>To Do</span>
+                                </button>
+                                }
+
+                                <!-- Complete -->
+                                @if (task.status !== 'completed') {
+                                <button (click)="updateStatus(task, 'completed')"
+                                    class="status-btn btn bgcomplete d-flex align-items-baseline gap-1">
+                                    <i class="fa-solid fa-check"></i>
+                                    <span>Complete</span>
+                                </button>
+                                }
+                            </div>
+
+                        </div>
+                        }
+                        }
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-lg-4 g-4">
+                <div class="card">
+                    <div class="d-flex align-items-center gap-3 title">
+                        <div class="d-flex justify-content-center align-items-center icon bgcompleted">
+                            <i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <h2>Completed</h2>
+                            <p class="tasks">{{completedTasks.length}} tasks</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-column overflow-y-auto pe-1">
+
+                        @if (completedTasks.length === 0) {
+                        <!-- Empty State -->
+                        <div class="d-flex flex-column align-items-center justify-content-center py-5 content">
+                            <i class="fa-regular fa-folder-open opacity-50"></i>
+                            <p>No tasks yet</p>
+                            <p class="mt-1">Click + to add one</p>
+                        </div>
+                        }
+                        @else {
+                        @for (task of completedTasks; track task.createdAt; let i = $index) {
+
+                        <div class="bg-white p-3 task mb-3">
+
+                            <!-- Top -->
+                            <div class="top-par d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="rounded-circle circle completecircle"></span>
+                                    <span class="index">#00{{ i + 1 }}</span>
+                                </div>
+
+                                <div class="d-flex align-items-center gap-1 btns">
+                                    <button (click)="editTask(task)"
+                                        class="btn edit-btn d-flex justify-content-center align-items-center">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
+                                    <button (click)="deleteTask(task)"
+                                        class="btn delete-btn d-flex justify-content-center align-items-center">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Title -->
+                            <h3 class="task-title text-decoration-line-through opacity-75">
+                                {{ task.title }}
+                            </h3>
+
+                            <!-- Description -->
+                            @if (task.description) {
+                            <p class="task-description">
+                                {{ task.description }}
+                            </p>
+                            }
+
+                            <!-- Tags -->
+                            <div class="tags d-flex flex-wrap align-items-center gap-2">
+
+                                <!-- Priority -->
+                                <span class="d-flex align-items-center priority" [class]="{
+                                'high': task.priority === 'high',
+                                'medium': task.priority === 'medium',
+                                'low': task.priority === 'low'
+                                }">
+                                    <span class="rounded-circle me-1" [class]="{
+                                    'bg-danger': task.priority === 'high',
+                                    'bg-warning': task.priority === 'medium',
+                                    'bg-success': task.priority === 'low'
+                                }"></span>
+                                    {{ task.priority === 'high'
+                                    ? 'HIGH PRIORITY'
+                                    : task.priority === 'medium'
+                                    ? 'MEDIUM'
+                                    : 'LOW'
+                                    }}
+                                </span>
+                                @if (task.status === 'completed') {
+                                <span
+                                    class="badge d-flex align-items-center gap-1 rounded-pill px-2 py-2 bg-success-subtle text-success"
+                                    style="font-size: 10px;">
+                                    <i class="fa-solid fa-check"></i> DONE
+                                </span>
+                                }
+
+                                <!-- Due Soon -->
+                                @if (task.dueDate) {
+
+                                @if (getDueStatus(task.dueDate) === 'overdue') {
+                                <span class="d-flex align-items-center priority overdue">
+                                    OVERDUE
+                                </span>
+                                }
+
+                                @if (getDueStatus(task.dueDate) === 'soon') {
+                                <span class="d-flex align-items-center priority due-soon">
+                                    DUE SOON
+                                </span>
+                                }
+
+                                }
+
+
+                            </div>
+
+                            <!-- Meta Info -->
+                            <div class="meta-info d-flex align-items-center border-bottom gap-3">
+
+                                @if (task.dueDate) {
+                                <div class="d-flex align-items-center gap-1 date">
+                                    <i class="fa-regular fa-calendar"></i>
+                                    <span>{{ formatDate(task.dueDate) }}</span>
+                                </div>
+                                }
+
+                                <div class="d-flex align-items-center gap-1 createdat">
+                                    <i class="fa-regular fa-clock"></i>
+                                    <span>{{ timeAgo(task.createdAt) }}</span>
+                                </div>
+
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="action-btns d-flex flex-wrap gap-3">
+                                @if (task.status === 'todo') {
+                                <button (click)="updateStatus(task, 'in-progress')"
+                                    class="status-btn btn bgstart d-flex align-items-baseline gap-1">
+                                    <i class="fa-solid fa-play"></i>
+                                    <span>Start</span>
+                                </button>
+                                }
+
+                                <!-- To Do -->
+                                @if (task.status === 'completed') {
+
+
+                                <!-- To Do => back to In Progress -->
+                                <button (click)="updateStatus(task, 'todo')"
+                                    class="status-btn btn bgtodo d-flex align-items-baseline gap-1">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                    <span>To Do</span>
+                                </button>
+
+
+                                <!-- Start => back to To Do -->
+                                <button (click)="updateStatus(task, 'todo')"
+                                    class="status-btn btn bgstart d-flex align-items-baseline gap-1">
+                                    <i class="fa-solid fa-play"></i>
+                                    <span>Start</span>
+                                </button>
+
+                                }
+                            </div>
+
+                        </div>
+                        }
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

@@ -1,0 +1,22 @@
+footer {
+    width: 100%;
+    background-image: linear-gradient(to right,
+            oklch(0.279 0.041 260.031) 0%,
+            oklch(0.208 0.042 265.755) 100%);
+    padding-block: 20px;
+    margin-top: 13rem !important;
+}
+
+footer p {
+    font-size: 14px;
+    color: oklch(0.704 0.04 256.788);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 0;
+}
+
+footer i {
+    color: oklch(0.655 0.212 29.998);
+}
