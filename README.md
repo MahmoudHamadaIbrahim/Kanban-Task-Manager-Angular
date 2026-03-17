@@ -1,59 +1,37 @@
-# Kanban
+🚀 Professional Kanban Task Manager (Angular Version)
+A high-performance, responsive Kanban Board application built with Angular 19+, featuring a modular architecture and reactive state management. This project demonstrates advanced Angular concepts, including Component-based architecture, Data Binding, and Local Storage persistence.
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.13.
+🚀 Live Demo
+https://kanban-task-manager-angular-mahmoud-hamada.vercel.app/
+✨ Key Features
+Modern Angular Architecture: Built using standalone components and modern Control Flow (@if, @for).
 
-## Development server
+Full CRUD Operations: Seamlessly Add, Edit, Update, and Delete tasks.
 
-To start a local development server, run:
+Dynamic Task Tracking: Organize workflow into To Do, In Progress, and Completed columns.
 
-```bash
-ng serve
-```
+Smart Priority System: Visual status for High, Medium, and Low priorities.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Time Tracking: Automatic "Time Ago" calculation and due date monitoring (Overdue / Due Soon badges).
 
-## Code scaffolding
+Persistence: Integrated with Browser LocalStorage API to keep your data safe after refresh.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Responsive UI: Fully optimized for all devices using Bootstrap 5 and custom CSS3 (OKLCH) colors.
 
-```bash
-ng generate component component-name
-```
+🛠️ Tech Stack
+Framework: Angular 19+
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Language: TypeScript (Advanced Interfaces & OOP)
 
-```bash
-ng generate --help
-```
+Styling: Bootstrap 5, CSS3, FontAwesome Icons
 
-## Building
+Deployment: Vercel / GitHub Pages
 
-To build the project run:
+📐 Angular Concepts Implemented
+Component Interaction: @ViewChild for modal management and @Output for event emitting.
 
-```bash
-ng build
-```
+Directives & Binding: [ngClass], [class], and Attribute binding for dynamic styling.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Template Logic: Modern Angular @for and @if blocks for clean, performant rendering.
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Lifecycle Hooks: ngOnInit for data fetching and state initialization.
