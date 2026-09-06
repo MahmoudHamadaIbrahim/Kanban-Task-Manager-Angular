@@ -42,7 +42,6 @@ export class Home {
     this.selectedIndex = index;
     this.modal.setEditData(task, index);
     this.modal.openModal();
-    this.modal.resetForm();
   }
 
   deleteTask(task: Task) {

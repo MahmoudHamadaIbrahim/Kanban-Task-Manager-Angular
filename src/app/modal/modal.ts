@@ -90,6 +90,7 @@ export class Modal {
   }
 
   resetForm() {
+    this.isEditMode = false;
     this.editIndex = null;
     this.editTaskData = null;
     this.currentTask = {
